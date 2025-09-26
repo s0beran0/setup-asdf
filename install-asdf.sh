@@ -44,21 +44,24 @@ else
   git -C ~/.asdf pull
 fi
 
-# Configura shell
+# Detecta shell e arquivo RC correto
 SHELL_RC="$HOME/.bashrc"
+COMPLETIONS_FILE="$HOME/.asdf/completions/asdf.bash"
 if [[ "$SHELL" == *"zsh"* ]]; then
   SHELL_RC="$HOME/.zshrc"
+  COMPLETIONS_FILE="$HOME/.asdf/completions/asdf.zsh"
 fi
 
+# Configura shell
 if ! grep -q "asdf.sh" "$SHELL_RC"; then
   echo "Configurando shell..."
   echo -e "\n# Configuração asdf" >> "$SHELL_RC"
   echo -e ". \$HOME/.asdf/asdf.sh" >> "$SHELL_RC"
-  echo -e ". \$HOME/.asdf/completions/asdf.bash" >> "$SHELL_RC"
+  echo -e ". $COMPLETIONS_FILE" >> "$SHELL_RC"
 fi
 
 # Carrega configuração no shell atual
-# Apenas funciona em bash/zsh interativo; caso contrário, abrir novo terminal
+# Apenas funciona em shells interativos
 if [[ "$SHELL" == *"bash"* || "$SHELL" == *"zsh"* ]]; then
   source "$SHELL_RC"
 fi
