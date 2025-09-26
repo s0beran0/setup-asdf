@@ -22,7 +22,7 @@ install_dependencies() {
       sudo dnf install -y git curl wget tar gzip bzip2 xz gcc make libffi-devel bzip2 bzip2-devel zlib-devel readline-devel sqlite sqlite-devel gpg
     elif [ -f /etc/lsb-release ] || [ -f /etc/debian_version ]; then
       sudo apt update
-      sudo apt install -y git curl wget tar gzip bzip2 xz build-essential libffi-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev gnupg
+      sudo apt install -y git curl wget tar gzip bzip2 xz-utils build-essential libffi-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev gnupg
     else
       echo "Distribuição Linux não suportada automaticamente. Instale as dependências manualmente."
     fi
@@ -52,10 +52,15 @@ fi
 
 if ! grep -q "asdf.sh" "$SHELL_RC"; then
   echo "Configurando shell..."
-  echo -e "\n. \$HOME/.asdf/asdf.sh" >> "$SHELL_RC"
-  echo -e "\n. \$HOME/.asdf/completions/asdf.bash" >> "$SHELL_RC"
+  echo -e "\n# Configuração asdf" >> "$SHELL_RC"
+  echo -e ". \$HOME/.asdf/asdf.sh" >> "$SHELL_RC"
+  echo -e ". \$HOME/.asdf/completions/asdf.bash" >> "$SHELL_RC"
 fi
 
-source "$SHELL_RC"
+# Carrega configuração no shell atual
+# Apenas funciona em bash/zsh interativo; caso contrário, abrir novo terminal
+if [[ "$SHELL" == *"bash"* || "$SHELL" == *"zsh"* ]]; then
+  source "$SHELL_RC"
+fi
 
 echo "asdf instalado com sucesso!"
